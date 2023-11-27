@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+    app:
+        build: ./badcat/apache/
+        container_name: badcat-app
+        image: badcat-app
+        ports:
+            - 8080:80 
+        volumes:
+            - ./html/:/var/www/html
+        privileged: true
+        depends_on:
+            - db
+
+    db:
+        build: ./badcat/db/
+        container_name: badcat-db
+        image: badcat-db
+        volumes:
+            - ./badcat/db:/var/lib/mysql
+            - ./badcat/db:/etc/mysql/conf.d/my.cnf
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=badcat_db
+            - MYSQL_USER=badcat_user
+            - MYSQL_PASSWORD=badcat_password
+        ports:
+            - 4306:3306
+
