@@ -2,29 +2,30 @@ version: '3.9'
 
 services:
     app:
-        build: ./badcat/apache/
-        container_name: badcat-app
+        build: ./badcat/apache
         image: badcat-app
+        container_name: badcat-app
         ports:
-            - 8080:80 
+            - '8080:80'
         volumes:
-            - ./html/:/var/www/html
+            - ./src:/var/www/html
         privileged: true
         depends_on:
             - db
 
     db:
-        build: ./badcat/db/
-        container_name: badcat-db
+        build: ./badcat/db
         image: badcat-db
-        volumes:
-            - ./badcat/db:/var/lib/mysql
-            - ./badcat/db:/etc/mysql/conf.d/my.cnf
+        container_name: badcat-db
         environment:
-            - MYSQL_ROOT_PASSWORD=root
-            - MYSQL_DATABASE=badcat_db
-            - MYSQL_USER=badcat_user
-            - MYSQL_PASSWORD=badcat_password
+            - MYSQL_ROOT_PASSWORD:root
+            - MYSQL_DATABASE:badcat_db
+            - MYSQL_USER:badcat_user
+            - MYSQL_PASSWORD:badcat_pswd
+            - TZ:'Asia/Tokyo'
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        volumes:
+            - ./badcat/db/data:/var/lib/mysql
         ports:
-            - 4306:3306
+            - '3306:330'
 
